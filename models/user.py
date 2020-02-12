@@ -196,8 +196,12 @@ class User(db.Model):
             True if user's tier is below tier parameter
 
         """
-        current_tier = self.get_tier()
-        return Tier[current_tier].value < Tier[tier].value
+        try:
+            current_tier = self.get_tier()
+            return Tier[current_tier].value < Tier[tier].value
+        except KeyError as key:
+            print("Invalid input for tier: %s", tier)
+            return False
 
 
     # These are for Flask Login --------
@@ -253,6 +257,7 @@ class User(db.Model):
             if rel_user and rel_user.user:
                 user = rel_user.user
 
+        #------- is_deleted() is not defined -------#
         if user and user.is_deleted():
             return None
 
