@@ -8,6 +8,14 @@ from .rel_user import RelUser
 from .rel_user_multi import RelUserMulti
 from .rel_user_text import RelUserText
 
+from enum import Enum
+
+class Tier(Enum):
+    Carbon   = 0
+    Bronze   = 1
+    Silver   = 2
+    Gold     = 3
+    Platinum = 4
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -174,24 +182,23 @@ class User(db.Model):
         return self.tier
 
     def is_below_tier(self, tier):
+        """
+        Returns True if user's current tier is below specified value, else otherwise
+
+        Parameters
+        -------
+        tier 
+            A string of tier level to compare against
+
+        Returns
+        -------
+        bool
+            True if user's tier is below tier parameter
+
+        """
         current_tier = self.get_tier()
+        return Tier[current_tier].value < Tier[tier].value
 
-        if current_tier == "Platinum":
-            return False
-
-        if current_tier == "Gold" and tier == "Platinum":
-            return True
-
-        if current_tier == "Silver" and tier in ("Gold", "Platinum"):
-            return True
-
-        if current_tier == "Bronze" and tier in ("Silver", "Gold", "Platinum"):
-            return True
-
-        if current_tier == "Carbon" and tier in ("Bronze", "Silver", "Gold", "Platinum"):
-            return True
-
-        return False
 
     # These are for Flask Login --------
     #
