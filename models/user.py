@@ -158,6 +158,18 @@ class User(db.Model):
         points = int(self.point_balance)
         return {"points": points, "dollars": points / 100}
 
+    def get_email(self):
+        """
+        Returns string of user email
+
+        Returns
+        -------
+        string
+            A string of user's email
+
+        """
+        return self.email_address;
+
     def get_tier(self):
         return self.tier
 
